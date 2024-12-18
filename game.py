@@ -2,18 +2,13 @@
 import pygame
 import os
 from scenes.home_scene import HomeScene
-from scenes.stage_select_scene import StageSelectScene
-from scenes.game_scene import GameScene
-from scenes.network_game_scene import NetworkGameScene
-from scenes.network_launcher_scene import NetworkLauncherScene
-from scenes.multiplayer_scene import MultiplayerGameScene
 from scenes.utils.logger import initialize_stage_logs
 
 class Game:
     def __init__(self):
         pygame.init()
         self.screen = pygame.display.set_mode((1440, 800))  # Increased height for better UI
-        pygame.display.set_caption("Battle Game")
+        pygame.display.set_caption("Castle Defense Game")
         self.clock = pygame.time.Clock()
         
         # Ensure models directory exists
