@@ -1,40 +1,76 @@
+# rl_agent.py
+
 import numpy as np
 import random
-import pickle
 import os
 import torch
 import torch.nn as nn
 import torch.optim as optim
 from collections import deque
+import json
 
-# Hyperparameters
+# Load character types from character_info.json
+def load_character_types():
+    try:
+        with open('character_info.json', 'r') as f:
+            character_info = json.load(f)
+            return list(character_info.keys())
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        raise Exception(f"Error loading character types: {e}")
+
+# =============================
+# Action Definitions
+# =============================
+
+CHARACTER_TYPES = load_character_types()
+VALID_ACTIONS = ['Idle', 'Walk', 'Run', 'Attack', 'Skill']
+
+# Updated action definitions for spawn agent
+ACTION_SPAWN_FIRE_VIZARD = 0
+ACTION_SPAWN_LIGHTNING_MAGE = 1
+ACTION_SPAWN_WANDERER_MAGICIAN = 2
+ACTION_DO_NOTHING = 3
+ACTION_SPACE_SIZE = 4  # [Spawn Fire_vizard, Spawn Lightning_Mage, Spawn Wanderer_Magician, Do Nothing]
+
+PLAYER_ACTION_SPACE_SIZE = ACTION_SPACE_SIZE
+CHARACTER_ACTION_SPACE_SIZE = len(VALID_ACTIONS)
+
+# =============================
+# Common Hyperparameters
+# =============================
+
+# DQN Hyperparameters
 GAMMA = 0.99         # Discount factor
 EPSILON_START = 1.0  # Starting exploration rate
 EPSILON_END = 0.01   # Minimum exploration rate
 EPSILON_DECAY = 0.995  # Decay rate per episode
-LR = 1e-4            # Learning rate
+LR = 1e-4            # Learning rate for DQN
 BATCH_SIZE = 64
 MEMORY_SIZE = 10000
 TARGET_UPDATE_FREQ = 1000  # Steps
-MAX_CHARACTERS = 20        # Maximum number of characters considered on the field
 
-# Define the action space
-ACTION_SPAWN = 0
-ACTION_CHANGE_SLOT = 1
-ACTION_DO_NOTHING = 2
-ACTION_SPACE_SIZE = 3  # Total number of possible actions
+# PPO Hyperparameters
+PPO_LR = 3e-4
+PPO_GAMMA = 0.99
+PPO_LAMBDA = 0.95
+PPO_CLIP = 0.2
+PPO_EPOCHS = 5
+PPO_BATCH_SIZE = 64
+PPO_ENT_COEF = 0.01
+PPO_VF_COEF = 0.5
+PPO_MAX_GRAD_NORM = 0.5
 
-# Map character types to indices
-CHARACTER_TYPES = ["Fire_vizard", "Lightning_Mage", "Wanderer_Magician"]
-CHARACTER_TYPE_MAPPING = {name: idx for idx, name in enumerate(CHARACTER_TYPES)}
-NUM_CHARACTER_TYPES = len(CHARACTER_TYPES)
+# Device Configuration
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-class DQNAgent:
-    def __init__(self, state_size, action_size, team='left', max_slots=5):
+# =============================
+# Base DQN Agent
+# =============================
+
+class BaseDQNAgent:
+    def __init__(self, state_size, action_size):
         self.state_size = state_size
         self.action_size = action_size
-        self.team = team
-        self.max_slots = max_slots
 
         self.memory = deque(maxlen=MEMORY_SIZE)
         self.gamma = GAMMA
@@ -42,9 +78,9 @@ class DQNAgent:
         self.epsilon_min = EPSILON_END
         self.epsilon_decay = EPSILON_DECAY
         self.learning_rate = LR
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.device = DEVICE
 
-        # Define the policy and target networks
+        # Networks
         self.policy_net = self.build_model().to(self.device)
         self.target_net = self.build_model().to(self.device)
         self.update_target_network()
@@ -53,7 +89,6 @@ class DQNAgent:
         self.steps_done = 0
 
     def build_model(self):
-        # Define a simple feedforward neural network
         model = nn.Sequential(
             nn.Linear(self.state_size, 256),
             nn.ReLU(),
@@ -69,9 +104,9 @@ class DQNAgent:
     def remember(self, state, action, reward, next_state, done):
         self.memory.append((state, action, reward, next_state, done))
 
-    def choose_action(self, state):
+    def choose_action(self, state, deterministic=True):
         self.steps_done += 1
-        if random.random() < self.epsilon:
+        if not deterministic and random.random() < self.epsilon:
             return random.randrange(self.action_size)
         else:
             state_tensor = torch.FloatTensor(state).unsqueeze(0).to(self.device)
@@ -90,33 +125,63 @@ class DQNAgent:
         next_state_batch = torch.FloatTensor(np.array([sample[3] for sample in batch])).to(self.device)
         done_batch = torch.FloatTensor([sample[4] for sample in batch]).to(self.device)
 
-        # Compute Q(s_t, a)
         q_values = self.policy_net(state_batch).gather(1, action_batch)
 
-        # Compute V(s_{t+1}) for all next states.
         with torch.no_grad():
             next_q_values = self.target_net(next_state_batch).max(1)[0]
 
-        # Compute the expected Q values
         expected_q_values = reward_batch + (1 - done_batch) * self.gamma * next_q_values
 
-        # Compute loss
         loss = nn.MSELoss()(q_values.squeeze(), expected_q_values)
 
-        # Optimize the model
         self.optimizer.zero_grad()
         loss.backward()
         self.optimizer.step()
+
+        return loss.item()
 
     def decay_epsilon(self):
         if self.epsilon > self.epsilon_min:
             self.epsilon *= self.epsilon_decay
 
     def save(self, filename):
-        torch.save(self.policy_net.state_dict(), filename)
+        torch.save({
+            'policy_net_state_dict': self.policy_net.state_dict(),
+            'target_net_state_dict': self.target_net.state_dict(),
+            'optimizer_state_dict': self.optimizer.state_dict(),
+            'epsilon': self.epsilon,
+            'steps_done': self.steps_done
+        }, filename)
 
     def load(self, filename):
         if os.path.exists(filename):
-            self.policy_net.load_state_dict(torch.load(filename))
+            checkpoint = torch.load(filename)
+            self.policy_net.load_state_dict(checkpoint['policy_net_state_dict'])
+            self.target_net.load_state_dict(checkpoint['target_net_state_dict'])
+            self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+            self.epsilon = checkpoint['epsilon']
+            self.steps_done = checkpoint['steps_done']
             self.update_target_network()
+
+# =============================
+# AI Player Agent (DQN-based)
+# =============================
+
+class AIPlayerAgent(BaseDQNAgent):
+    def __init__(self, state_size, team='left'):
+        self.team = team
+        super().__init__(state_size=state_size, action_size=PLAYER_ACTION_SPACE_SIZE)
+
+    def decide_character_type(self, action):
+        """
+        Maps the chosen action to a character type.
+        """
+        if action == ACTION_SPAWN_FIRE_VIZARD:
+            return CHARACTER_TYPES[0]
+        elif action == ACTION_SPAWN_LIGHTNING_MAGE:
+            return CHARACTER_TYPES[1]
+        elif action == ACTION_SPAWN_WANDERER_MAGICIAN:
+            return CHARACTER_TYPES[2]
+        else:
+            return None  # Do nothing
 

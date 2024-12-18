@@ -1,29 +1,29 @@
 {
     "Fire_vizard":{
-        "hp":100,
+        "hp":150,
         "attack_range":200,
-        "attack_damage":5,
+        "attack_damage":15,
         "skills":{
-            "Fireball":20,
-            "Flame_jet":40
+            "skill1":20,
+            "skill2":30
         }
     },
     "Lightning_Mage":{
         "hp":100,
-        "attack_range":200,
-        "attack_damage":12,
+        "attack_range":250,
+        "attack_damage":20,
         "skills":{
-            "Light_ball":20,
-            "Light_charge":35
+            "skill1":40,
+            "skill2":80
         }
     },
     "Wanderer_Magician":{
-        "hp":150,
-        "attack_range":130,
-        "attack_damage":9,
+        "hp":300,
+        "attack_range":150,
+        "attack_damage":6,
         "skills":{
-            "Magic_arrow":20,
-            "Magic_sphere":45
+            "skill1":15,
+            "skill2":20
         }
     }
 }

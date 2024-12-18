@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 500">
+    <defs>
+        <!-- Stage 1 Background -->
+        <linearGradient id="stage1Gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" style="stop-color:#B2E1FF;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#D4F1F9;stop-opacity:1" />
+        </linearGradient>
+        
+
+        
+
+        
+        <!-- Ground patterns -->
+        <pattern id="groundPattern1" width="20" height="20" patternUnits="userSpaceOnUse">
+        <rect width="20" height="20" fill="#90A955"/>
+        <circle cx="10" cy="10" r="1" fill="#708238" opacity="0.5"/>
+        </pattern>
+        
+        <pattern id="groundPattern2" width="20" height="20" patternUnits="userSpaceOnUse">
+        <rect width="20" height="20" fill="#B87333"/>
+        <rect x="0" y="0" width="10" height="10" fill="#8B4513" opacity="0.3"/>
+        </pattern>
+        
+        <pattern id="groundPattern3" width="20" height="20" patternUnits="userSpaceOnUse">
+        <rect width="20" height="20" fill="#3E4B66"/>
+        <circle cx="10" cy="10" r="2" fill="#2C3E50" opacity="0.5"/>
+        </pattern>
+    </defs>
+    
+    <!-- Stage 1 - Peaceful Meadow -->
+    <g id="stage1">
+        <rect width="1440" height="500" fill="url(#stage1Gradient)"/>
+        <rect y="300" width="1440" height="200" fill="url(#groundPattern1)"/>
+        
+        <!-- Peaceful clouds -->
+        <g fill="white" opacity="0.8">
+        <circle cx="200" cy="100" r="30"/>
+        <circle cx="230" cy="100" r="40"/>
+        <circle cx="260" cy="100" r="30"/>
+        
+        <circle cx="1000" cy="150" r="30"/>
+        <circle cx="1030" cy="150" r="40"/>
+        <circle cx="1060" cy="150" r="30"/>
+        </g>
+    </g>
+</svg>
