@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 500">
+  <!-- Sky gradient -->
+  <defs>
+    <linearGradient id="skyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#87CEEB;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#E0F6FF;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Cloud pattern -->
+    <pattern id="cloudPattern" x="0" y="0" width="400" height="200" patternUnits="userSpaceOnUse">
+      <circle cx="50" cy="100" r="30" fill="white" opacity="0.8"/>
+      <circle cx="80" cy="100" r="40" fill="white" opacity="0.8"/>
+      <circle cx="110" cy="100" r="30" fill="white" opacity="0.8"/>
+    </pattern>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="100%" height="100%" fill="url(#skyGradient)"/>
+  
+  <!-- Decorative elements -->
+  <rect width="100%" height="100%" fill="url(#cloudPattern)" opacity="0.5"/>
+  
+  <!-- Castles silhouette -->
+  <path d="M100,300 L100,200 L150,200 L150,150 L200,150 L200,200 L250,200 L250,300 Z" 
+        fill="#2C3E50" opacity="0.8"/>
+  <path d="M1340,300 L1340,200 L1290,200 L1290,150 L1240,150 L1240,200 L1190,200 L1190,300 Z" 
+        fill="#2C3E50" opacity="0.8"/>
+  
+  <!-- Ground -->
+  <rect x="0" y="300" width="1440" height="200" fill="#90A955"/>
+  
+  <!-- Battle effects -->
+  <circle cx="720" cy="250" r="100" fill="#FFD700" opacity="0.2">
+    <animate attributeName="opacity" values="0.2;0.4;0.2" dur="3s" repeatCount="indefinite"/>
+  </circle>
+</svg>

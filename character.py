@@ -192,9 +192,8 @@ class Character:
                 
         return False
 
-    # Replace the existing update method with this simplified version
     def update(self, enemies, enemy_castle, delta_time, current_time):
-        """Main update loop with simplified logic"""
+        """Main update loop with simplified logic and immediate attack handling"""
         if self.hp <= 0:
             if not self.is_dead:
                 self.is_dead = True
@@ -228,10 +227,11 @@ class Character:
             if closest_target:
                 self.target = closest_target
                 if closest_dist <= self.attack_range:
-                    # Target in range - attack or use skill
+                    # Target in range - stop moving and attack
                     if current_time - self.last_attack_time >= self.damage_cooldown:
                         self.set_action('Skill' if random.random() < 0.3 else 'Attack')
                         self.last_attack_time = current_time
+                    self.vel_x = 0  # Stop movement
                 else:
                     # Move towards target
                     self.set_action('Walk' if random.random() < 0.8 else 'Run')
@@ -239,7 +239,7 @@ class Character:
                 # No valid targets - move forward
                 self.set_action('Walk')
 
-        # Apply movement
+        # Apply movement only if not attacking
         if self.current_action in ['Walk', 'Run']:
             speed = self.run_speed if self.current_action == 'Run' else self.walk_speed
             new_x = self.x + (speed if self.team == 'left' else -speed) * delta_time
@@ -260,7 +260,7 @@ class Character:
                 self.sprite_index == self.get_damage_frame()):
                 self.apply_damage_to_target()
                 self.damage_already_applied = True
-
+    
     # Replace the existing is_within_attack_range method with this simplified version
     def is_within_attack_range(self, target):
 

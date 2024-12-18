@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 500">
+    <defs>
+            <!-- Stage 2 Background -->
+        <linearGradient id="stage2Gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" style="stop-color:#FFB88C;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#DE6262;stop-opacity:1" />
+        </linearGradient>
+
+            <!-- Ground patterns -->
+        <pattern id="groundPattern1" width="20" height="20" patternUnits="userSpaceOnUse">
+        <rect width="20" height="20" fill="#90A955"/>
+        <circle cx="10" cy="10" r="1" fill="#708238" opacity="0.5"/>
+        </pattern>
+        
+        <pattern id="groundPattern2" width="20" height="20" patternUnits="userSpaceOnUse">
+        <rect width="20" height="20" fill="#B87333"/>
+        <rect x="0" y="0" width="10" height="10" fill="#8B4513" opacity="0.3"/>
+        </pattern>
+        
+        <pattern id="groundPattern3" width="20" height="20" patternUnits="userSpaceOnUse">
+        <rect width="20" height="20" fill="#3E4B66"/>
+        <circle cx="10" cy="10" r="2" fill="#2C3E50" opacity="0.5"/>
+        </pattern>
+    </defs>
+    <!-- Stage 2 - Battle Desert -->
+    <g id="stage2" display="none">
+        <rect width="1440" height="500" fill="url(#stage2Gradient)"/>
+        <rect y="300" width="1440" height="200" fill="url(#groundPattern2)"/>
+        
+        <!-- Desert mountains -->
+        <path d="M0,300 L200,150 L400,300" fill="#8B4513" opacity="0.5"/>
+        <path d="M800,300 L1000,100 L1200,300" fill="#8B4513" opacity="0.5"/>
+    </g>
+</svg>

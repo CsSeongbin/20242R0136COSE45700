@@ -411,7 +411,7 @@ class GameScene(Scene):
         stage_info = {
             i: {
                 "name": f"Stage {i+1} - {'Novice' if i < 3 else 'Advanced' if i < 7 else 'Master'}",
-                "description": f"Battle against AI trained for {200 * (i+1)} episodes.",
+                "description": f"Battle against AI.",
                 "difficulty": "Easy" if i < 3 else "Medium" if i < 7 else "Hard",
                 "ai_model": f"episode_{200 * (i+1)}",
                 "background_image_path": os.path.join('sprites', f"game_scene_{'1' if i < 3 else '2' if i < 7 else '3'}.png")

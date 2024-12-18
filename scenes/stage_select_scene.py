@@ -38,7 +38,7 @@ class StageSelectScene(Scene):
         self.stages = [
             {
                 "name": f"Stage {i+1}",
-                "description": f"Battle against AI trained for {200 * (i+1)} episodes.",
+                "description": f"Battle against AI.",
                 "difficulty": "Easy" if i < 3 else "Medium" if i < 7 else "Hard",
                 "ai_model": f"episode_{200 * (i+1)}"
             }

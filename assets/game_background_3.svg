@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 500">
+    <defs>
+        <!-- Stage 3 Background -->
+        <linearGradient id="stage3Gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" style="stop-color:#4B6CB7;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#182848;stop-opacity:1" />
+        </linearGradient>
+
+            <!-- Ground patterns -->
+        <pattern id="groundPattern1" width="20" height="20" patternUnits="userSpaceOnUse">
+        <rect width="20" height="20" fill="#90A955"/>
+        <circle cx="10" cy="10" r="1" fill="#708238" opacity="0.5"/>
+        </pattern>
+        
+        <pattern id="groundPattern2" width="20" height="20" patternUnits="userSpaceOnUse">
+        <rect width="20" height="20" fill="#B87333"/>
+        <rect x="0" y="0" width="10" height="10" fill="#8B4513" opacity="0.3"/>
+        </pattern>
+        
+        <pattern id="groundPattern3" width="20" height="20" patternUnits="userSpaceOnUse">
+        <rect width="20" height="20" fill="#3E4B66"/>
+        <circle cx="10" cy="10" r="2" fill="#2C3E50" opacity="0.5"/>
+        </pattern>
+    </defs>
+    <!-- Stage 3 - Dark Realm -->
+    <g id="stage3" display="none">
+        <rect width="1440" height="500" fill="url(#stage3Gradient)"/>
+        <rect y="300" width="1440" height="200" fill="url(#groundPattern3)"/>
+        
+        <!-- Mystical elements -->
+        <circle cx="720" cy="100" r="50" fill="white" opacity="0.1">
+        <animate attributeName="opacity" values="0.1;0.3;0.1" dur="3s" repeatCount="indefinite"/>
+        </circle>
+        <path d="M0,100 Q720,200 1440,100" stroke="white" stroke-width="2" opacity="0.2"/>
+    </g>
+</svg>

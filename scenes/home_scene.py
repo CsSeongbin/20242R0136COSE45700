@@ -43,8 +43,8 @@ class HomeScene(Scene):
         # Menu options
         self.selected_option = 0
         self.options = [
-            "VS AI",
-            "2 Players",
+            "Campaign",
+            "Local Multiplayer",
             "Network Game",
             "Quit"
         ]
@@ -64,9 +64,9 @@ class HomeScene(Scene):
 
     def handle_selection(self):
         selected = self.options[self.selected_option]
-        if selected == "VS AI":
+        if selected == "Campaign":
             self.switch_to_scene(StageSelectScene(self.screen))
-        elif selected == "2 Players":
+        elif selected == "Local Multiplayer":
             self.switch_to_scene(MultiplayerGameScene(self.screen))
         elif selected == "Network Game":
             self.switch_to_scene(NetworkLauncherScene(self.screen))
@@ -84,7 +84,7 @@ class HomeScene(Scene):
         self.screen.blit(self.overlay, (0, 0))
         
         # Draw title with shadow
-        title_text = "Battle Game"
+        title_text = "Castle Defense Game"
         title_color = (255, 255, 255)  # White text
         shadow_color = (0, 0, 0)        # Black shadow
         title_position = (self.screen.get_width() // 2, 100)
